@@ -75,8 +75,9 @@ var NO_JQUERY = {};
      var pm = {
 
          send: function(options) {
-             var o = $.extend({}, pm.defaults, options),
-             target = o.target;
+             var o = $.extend({}, pm.defaults, options);
+             if (o.target == null) { o.target = window.parent; }
+             var target = o.target;
              if (!o.target) {
                  console.warn("postmessage target window required");
                  return;
@@ -105,7 +106,7 @@ var NO_JQUERY = {};
          bind: function(type, fn, origin, hash, async_reply) {
            pm._replyBind ( type, fn, origin, hash, async_reply );
          },
-       
+
          _replyBind: function(type, fn, origin, hash, isCallback) {
            if (("postMessage" in window) && !hash) {
                pm._bind();
@@ -243,7 +244,7 @@ var NO_JQUERY = {};
                            pm.send({target:e.source, data:data, type:msg.callback});
                        }
                      }
-                     
+
                      try {
                          if ( o.callback ) {
                            o.fn(msg.data, sendReply, e);
@@ -390,7 +391,7 @@ var NO_JQUERY = {};
                          pm.send({target:source_window, data:data, type:msg.callback, hash:true, url:hash.source.url});
                        }
                      }
-                     
+
                      try {
                          if ( o.callback ) {
                            o.fn(msg.data, sendReply);
